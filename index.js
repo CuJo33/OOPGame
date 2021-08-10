@@ -6,18 +6,17 @@ class Room {
     symbol,
     description,
     houseLevel,
-    specialAction,
     gridRef,
-    possibleDirections
+    possibleDirections,
+    linkedRooms
   ) {
     this._name = name;
     this._objName = objName;
     this._symbol = symbol;
     this._description = description;
     this._houseLevel = houseLevel;
-    this._specialAction = {};
-    this._gridRef = {};
-    this._possibleDirections = {};
+    this._gridRef = gridRef;
+    this._possibleDirections = possibleDirections;
     this._linkedRooms = {};
   }
 
@@ -72,9 +71,8 @@ class Room {
   }
 
   set gridRef(array) {
-    this._gridRef[0] = array[0];
-    console.log(array[0]);
-    this._gridRef[1] = array[1];
+    this._gridRef[0] = array[0] || null;
+    this._gridRef[1] = array[1] || null;
   }
 
   // possibleRooms
@@ -89,6 +87,15 @@ class Room {
     this._possibleDirections[3] = array[3] || null;
   }
 
+  // linkedRooms
+  get linkedRooms() {
+    return this._linkedRooms;
+  }
+
+  // set linkedRooms(direction, room) {
+  //   this._linkedRooms = [direction, room]
+  // }
+
   // Methods
   // possibleRooms(value) {
   //   this._linkedRooms[direction] = direction;
@@ -96,7 +103,6 @@ class Room {
 
   moveRooms(direction) {
     if (direction in this._linkedRooms) {
-      console.log(`within moveRooms ` + this._linkedRooms[direction]);
       return this._linkedRooms[direction];
     } else alert("You can't go this way");
     return this;
@@ -128,7 +134,7 @@ const EntranceHall = new Room(
   "an open entrance way leading to the Foyer to the west, untravelled rooms lie in the other directions",
   ["ground"],
   [0, 0],
-  ["north", "east", "south", null]
+  ["north", "east", "south", "west"]
 );
 
 const Foyer = new Room(
@@ -138,7 +144,7 @@ const Foyer = new Room(
   "an empty foyer with a clock, to the west is a Grand Staircase and to the east is the Entrance Hall",
   ["ground"],
   [-1, 0],
-  ["north", null, "south", null]
+  ["north", "east", "south", "west"]
 );
 
 const GrandStaircase = new Room(
@@ -215,9 +221,9 @@ const CharredRoom = new Room(
   ["north", "east", "south", "west"]
 );
 
-const Libary = new Room(
-  "Libary",
-  "Libary",
+const Library = new Room(
+  "Library",
+  "Library",
   "Event",
   "a large array of books on shelves",
   ["upper", "ground"],
@@ -661,7 +667,7 @@ let Rooms = [
   StairsFromBasement,
   BloodyRoom,
   CharredRoom,
-  Libary,
+  Library,
   CollapsedRoom,
   Conservatory,
   Chapel,
@@ -748,22 +754,99 @@ function directionOpposite(direction) {
 }
 
 function getNewRoomName() {
-  result = Math.floor(Math.random() * 5);
+  result = Math.floor(Math.random() * 45);
   newRoomName = Rooms[result];
   newRoom = newRoomName.objName;
   return newRoomName;
 }
 
-function getNewRoomObj() {
-  result = Math.floor(Math.random() * 5);
-  newRoomName = Rooms[result];
-  newRoom = newRoomName.objName;
-  return newRoom;
+let meepleIds = [
+  "grid-32+",
+  "grid-22+",
+  "grid-12+",
+  "grid02+",
+  "grid12+",
+  "grid22+",
+  "grid-31+",
+  "grid-21+",
+  "grid-11+",
+  "grid01+",
+  "grid11+",
+  "grid21+",
+  "grid-30+",
+  "grid-20+",
+  "grid-10+",
+  "grid00+",
+  "grid10+",
+  "grid20+",
+  "grid-3-1+",
+  "grid-2-1+",
+  "grid-1-1+",
+  "grid0-1+",
+  "grid1-1+",
+  "grid2-1+",
+];
+
+function meeple(currentRoom) {
+  currentRoomGridRef = changeGridRefToMeepleId(currentRoom.gridRef);
+  for (var i = 0, len = meepleIds.length; i < len; i++) {
+    if (meepleIds[i] !== currentRoomGridRef) {
+      document.getElementById(meepleIds[i]).style.display = "none";
+    } else {
+      document.getElementById(meepleIds[i]).style.display = "inline-block";
+    }
+  }
 }
+
+function getImgLink(newRoom) {
+  imgLink = `EditedPics/${newRoom.objName}.png`;
+  return imgLink;
+}
+
+function gridRefX(room) {
+  array = room._gridRef;
+  console.log(`within the gridrefx function this is the array - ` + array);
+  x = array[0];
+  return x;
+}
+
+function gridRefY(room) {
+  return room._gridRef[1];
+}
+
+function pushGridRef(GridRef, direction) {
+  if (direction == "north") {
+    GridRef[1] = GridRef[1] + 1;
+    newGridRef = GridRef;
+  } else if (direction == "south") {
+    GridRef[1] = GridRef[1] - 1;
+    newGridRef = GridRef;
+  } else if (direction == "east") {
+    GridRef[0] = GridRef[0] + 1;
+    newGridRef = GridRef;
+  } else {
+    GridRef[0] = GridRef[0] - 1;
+    newGridRef = GridRef;
+  }
+  return newGridRef;
+}
+
+function changeGridRefToMeepleId(gridRef) {
+  return `grid` + gridRef[0] + gridRef[1] + `+`;
+}
+function displaynewRoom(newGridRef) {}
+// document.getElementById("changedimage").src = imglink;
 
 // Game Functions
 function startGame() {
   displayRoomInfo(currentRoom);
+  meeple(currentRoom);
+
+  // Set the known linkedRooms
+  EntranceHall.linkRooms("west", Foyer);
+  Foyer.linkRooms("east", EntranceHall);
+  Foyer.linkRooms("west", GrandStaircase);
+  GrandStaircase.linkRooms("east", Foyer);
 
   document.addEventListener("keydown", function (event) {
     if (event.key === "Enter") {
@@ -771,22 +854,59 @@ function startGame() {
       command = command.toLowerCase();
       const directions = ["north", "south", "east", "west"];
       if (directions.includes(command)) {
+        // Check to see if the Room you are in has a room in the direction that has been asked, if it doesn't get a new Room
         if (!currentRoom._linkedRooms[command]) {
           // first what is the newRoom?
           newRoom = getNewRoomName();
           // need to call the new room if unknown and pass through the linkrooms to both the current room and the new room in the opposite direction
           currentRoom.linkRooms(command, newRoom);
-          newRoom.linkRooms(
-            directionOpposite(command.toLowerCase()),
-            currentRoom
-          );
-          console.log(currentRoom._linkedRooms);
-          console.log(newRoom._linkedRooms);
+          newRoom.linkRooms(directionOpposite(command), currentRoom);
+          // create the imgLink for the new room
+          imgLink = getImgLink(newRoom);
+          // work out the gridRefs for the currentRoom
+          console.log(currentRoom);
+          currentGridRef = [gridRefX(currentRoom), gridRefY(currentRoom)];
+          // console.log(`currentGridRef  ` + currentGridRef);
+          // create the gridRefs for the newRoom
+          // make sure the newGridRef is empty
+          newGridRef = [];
+          newGridRef = pushGridRef(currentGridRef, command);
+          // console.log(`NEWGridRef  ` + newGridRef);
+          // set the new rooms gridref manipulation
+          newManipulatedGridRef = changeGridRefToMeepleId(newGridRef);
+          // console.log(`NEWGridRef  ` + newGridRef);
+          // console.log(`newManipulatedGridRef  ` + newManipulatedGridRef);
+
+          //document.getElementById(newGridRef).src = imglink
           currentRoom = currentRoom.moveRooms(command);
+          meeple(currentRoom);
+          // console.log(
+          //   `currentroom which is actually the newly moved room _gridref ` +
+          //     currentRoom._gridRef
+          // );
+          // console.log(`newRoom_gridref ` + newGridRef);
+          // console.log(
+          //   `this will be set into the currentRoom grid ref being the new rooms`[
+          //     (gridRefX(newGridRef), gridRefY(newGridRef))
+          //   ]
+          // );
+          currentRoom._gridRef = [newGridRef[0], newGridRef[1]];
+          console.log(
+            `what is the currentroom_gridRef ` + currentRoom._gridRef
+          );
+          console.log(imgLink);
+          document.getElementById(newManipulatedGridRef.slice(0, -1)).src =
+            imgLink;
+          document.getElementById(
+            newManipulatedGridRef.slice(0, -1)
+          ).style.display = "block";
+          document.getElementById(newManipulatedGridRef).style.display =
+            "block";
           displayRoomInfo(currentRoom);
           document.getElementById("userInput").value = "";
         } else {
           currentRoom = currentRoom.moveRooms(command);
+          meeple(currentRoom);
           displayRoomInfo(currentRoom);
           document.getElementById("userInput").value = "";
         }

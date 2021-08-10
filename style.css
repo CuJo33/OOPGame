@@ -2,39 +2,59 @@ body {
   text-align: center;
 }
 
-#Question1 {
-  display: none;
-  width: 750px;
-  height: 300px;
+#mapAppature {
+  border: black 1px solid;
+  position: relative;
+  height: 800px;
+  width: 1200px;
+  overflow: hidden;
 }
 
 #mapArea {
   position: absolute;
   margin: auto;
-  top: 200px;
+  top: 100px;
   right: 0;
   bottom: 0;
   left: 0;
-  height: 700px;
-  width: 1400px;
-  background-color: #ccc;
-  border-radius: 3px;
+  height: 800px;
+  width: 1200px;
+  background-color: wheat;
+  /* transform: translate(100px, 100px); */
+  /* border-radius: 3px; */
 }
 
-.forcehover {
+.forceHeight {
+  height: 200px;
+  width: 1200px;
+  margin: 0px !important;
+}
+
+.PicSize {
   height: 200px;
   width: 200px;
 }
 
-.forcehover:hover {
-  height: 205px;
-  width: 205px;
+.imageWrapper {
+  position: relative;
+}
+.overlayImage {
+  position: absolute;
+  top: 75px;
+  left: 75px;
+  /* mix-blend-mode: multiply; */
 }
 
-.height {
-  height: 250px;
+.forceSize {
+  height: 50px;
+  width: 51px;
 }
 
-#changedimage {
-  height: 200px;
+.noMargins {
+  padding: 0px !important;
+  margin: 0px !important;
+}
+
+.noBorder {
+  display: none !important;
 }
