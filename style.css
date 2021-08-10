@@ -1,0 +1,40 @@
+body {
+  text-align: center;
+}
+
+#Question1 {
+  display: none;
+  width: 750px;
+  height: 300px;
+}
+
+#mapArea {
+  position: absolute;
+  margin: auto;
+  top: 200px;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 700px;
+  width: 1400px;
+  background-color: #ccc;
+  border-radius: 3px;
+}
+
+.forcehover {
+  height: 200px;
+  width: 200px;
+}
+
+.forcehover:hover {
+  height: 205px;
+  width: 205px;
+}
+
+.height {
+  height: 250px;
+}
+
+#changedimage {
+  height: 200px;
+}
