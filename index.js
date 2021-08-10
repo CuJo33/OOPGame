@@ -96,6 +96,7 @@ class Room {
 
   moveRooms(direction) {
     if (direction in this._linkedRooms) {
+      console.log(`within moveRooms ` + this._linkedRooms[direction]);
       return this._linkedRooms[direction];
     } else alert("You can't go this way");
     return this;
@@ -136,7 +137,7 @@ const Foyer = new Room(
   null,
   "an empty foyer with a clock, to the west is a Grand Staircase and to the east is the Entrance Hall",
   ["ground"],
-  [null, null],
+  [-1, 0],
   ["north", null, "south", null]
 );
 
@@ -146,7 +147,7 @@ const GrandStaircase = new Room(
   null,
   "a grand staircase leading to the upper level of the house",
   ["ground"],
-  [-1, 0],
+  [-2, 0],
   [null, null, null, null]
 );
 
@@ -769,18 +770,26 @@ function startGame() {
       command = document.getElementById("userInput").value;
       command = command.toLowerCase();
       const directions = ["north", "south", "east", "west"];
-      if (directions.includes(command.toLowerCase())) {
-        // first what is the newRoom?
-        newRoom = getNewRoomName();
-        // need to call the new room if unknown and pass through the linkrooms to both the current room and the new room in the opposite direction
-        currentRoom.linkRooms(command, newRoom);
-        newRoom.linkRooms(
-          directionOpposite(command.toLowerCase()),
-          currentRoom.objName
-        );
-        currentRoom = currentRoom.moveRooms(command);
-        displayRoomInfo(currentRoom);
-        document.getElementById("userInput").value = "";
+      if (directions.includes(command)) {
+        if (!currentRoom._linkedRooms[command]) {
+          // first what is the newRoom?
+          newRoom = getNewRoomName();
+          // need to call the new room if unknown and pass through the linkrooms to both the current room and the new room in the opposite direction
+          currentRoom.linkRooms(command, newRoom);
+          newRoom.linkRooms(
+            directionOpposite(command.toLowerCase()),
+            currentRoom
+          );
+          console.log(currentRoom._linkedRooms);
+          console.log(newRoom._linkedRooms);
+          currentRoom = currentRoom.moveRooms(command);
+          displayRoomInfo(currentRoom);
+          document.getElementById("userInput").value = "";
+        } else {
+          currentRoom = currentRoom.moveRooms(command);
+          displayRoomInfo(currentRoom);
+          document.getElementById("userInput").value = "";
+        }
       } else {
         document.getElementById("userInput").value = "";
         alert("that is not a valid command, please try again");
