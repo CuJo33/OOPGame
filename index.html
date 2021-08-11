@@ -21,11 +21,27 @@
   <body>
     <div class="container-fluid">
       <div class="col justify-content-center">
-        <h1>Betrayal at House on the Haunted Hill</h1>
+        <h1 id="mainTitle">Betrayal at House on the Haunted Hill</h1>
       </div>
       <div id="textArea"></div>
-      <div>Which Direction would you like to travel?   <input type="text" id="userInput" /></div>
+      <br>
+      <div id="directionQuestion">Which Direction would you like to travel?   <input type="text" id="userInput" /></div>
       <div id="mapAppature justify-content-center">
+        <div id="startingpage">
+          <div class="justify-content-center">
+            <br><br><br><br>
+            <h4 id="subTitle">Welcome to the explorer game Betrayal at the House on the Haunted Hill</h4>
+            <br>
+            <div class="row" class="justify-content-center">
+            <input
+                  type="button"
+                  value="Start Game"
+                  class="btn btn-success mx-auto"
+                  onclick="startGameClick()"
+                />
+            </div>
+          </div>
+        </div>
         <div id="mapArea">
           <div class="row forceHeight">
             <div class="col-2 noMargins imageWrapper"><img class="PicSize" id="grid-32"><img class="forceSize overlayImage justify-content-center" id="grid-32+" src="EditedPics/MeepleRed.png"></div>

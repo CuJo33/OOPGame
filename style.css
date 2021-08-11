@@ -1,5 +1,14 @@
 body {
   text-align: center;
+  background-color: black;
+}
+
+#mainTitle,
+#subTitle,
+#directionQuestion,
+#textArea,
+#userInput {
+  color: rgb(233, 222, 116);
 }
 
 #mapAppature {
@@ -33,6 +42,7 @@ body {
 .PicSize {
   height: 200px;
   width: 200px;
+  display: none;
 }
 
 .imageWrapper {

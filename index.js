@@ -210,7 +210,7 @@ const UpperLanding = new Room(
 );
 
 const StairsFromBasement = new Room(
-  "StairsFromBasement",
+  "Stairs From the Basement",
   "StairsFromBasement",
   null,
   "a dark staircase conneting the Foyer to the basement",
@@ -319,7 +319,7 @@ const Vault = new Room(
 );
 
 const StoreRoom = new Room(
-  "StoreRoom",
+  "Store Room",
   "StoreRoom",
   "Item",
   "a nicely organised room full of old wears, could you maybe pick something up?",
@@ -521,7 +521,7 @@ const StatuaryCorridor = new Room(
 );
 
 const OrganRoom = new Room(
-  "OrganRoom",
+  "Organ Room",
   "OrganRoom",
   "Event",
   "a large organ with pews lining the room, song books are littering the aisles",
@@ -1008,5 +1008,21 @@ function startGame() {
   });
 }
 
+document.getElementById("startingpage").style.display = "inline-block";
+document.getElementById("mapArea").style.display = "none";
+document.getElementById("textArea").style.display = "none";
+document.getElementById("directionQuestion").style.display = "none";
+document.getElementById("userInput").style.display = "none";
+
 // Start game
-startGame();
+function startGameClick() {
+  document.getElementById("grid00").style.display = "inline-block";
+  document.getElementById("grid-10").style.display = "inline-block";
+  document.getElementById("grid-20").style.display = "inline-block";
+  document.getElementById("startingpage").style.display = "none";
+  document.getElementById("mapArea").style.display = "inline-block";
+  document.getElementById("textArea").style.display = "inline-block";
+  document.getElementById("directionQuestion").style.display = "inline-block";
+  document.getElementById("userInput").style.display = "inline-block";
+  startGame();
+}
