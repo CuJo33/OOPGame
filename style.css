@@ -1,13 +1,53 @@
 body {
-  text-align: center;
   background-color: black;
 }
 
-#mainTitle,
-#subTitle,
-#directionQuestion,
-#textArea,
+.gameName {
+  background-color: royalblue;
+}
+
+.boxImage {
+  position: absolute;
+}
+
 #userInput {
+  justify-content: center;
+  margin-left: 20px;
+}
+
+#imgGameLogo {
+  width: 303px;
+  height: 90px;
+}
+
+#mainTitle {
+  text-align: center;
+  margin-top: 50px;
+  color: rgb(233, 221, 116);
+}
+
+#imgGamebox {
+  height: 200px;
+  margin-left: 830px;
+}
+
+#subTitle,
+#details,
+#details2,
+#howTo,
+#howTwo {
+  text-align: center;
+  color: rgba(233, 221, 116, 0.801);
+}
+
+#tip {
+  text-align: center;
+  color: rgba(248, 42, 42, 0.541);
+}
+
+#directionQuestion,
+#textArea {
+  text-align: center;
   color: rgb(233, 222, 116);
 }
 
@@ -28,7 +68,7 @@ body {
   left: 0;
   height: 800px;
   width: 1200px;
-  background-color: wheat;
+  background-color: black;
   /* transform: translate(100px, 100px); */
   /* border-radius: 3px; */
 }
@@ -48,6 +88,7 @@ body {
 .imageWrapper {
   position: relative;
 }
+
 .overlayImage {
   position: absolute;
   top: 75px;
@@ -67,4 +108,8 @@ body {
 
 .noBorder {
   display: none !important;
+}
+
+#myButton {
+  background-color: rgba(46, 172, 8, 0.835);
 }

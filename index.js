@@ -1008,11 +1008,12 @@ function startGame() {
   });
 }
 
-document.getElementById("startingpage").style.display = "inline-block";
+document.getElementById("startingpage").style.display = "block";
 document.getElementById("mapArea").style.display = "none";
 document.getElementById("textArea").style.display = "none";
 document.getElementById("directionQuestion").style.display = "none";
 document.getElementById("userInput").style.display = "none";
+document.getElementById("gamelogo").style.display = "none";
 
 // Start game
 function startGameClick() {
@@ -1020,10 +1021,12 @@ function startGameClick() {
   document.getElementById("grid-10").style.display = "inline-block";
   document.getElementById("grid-20").style.display = "inline-block";
   document.getElementById("startingpage").style.display = "none";
-  document.getElementById("mapArea").style.display = "inline-block";
-  document.getElementById("textArea").style.display = "inline-block";
-  document.getElementById("directionQuestion").style.display = "inline-block";
+  document.getElementById("mapArea").style.display = "block";
+  document.getElementById("textArea").style.display = "block";
+  document.getElementById("directionQuestion").style.display = "block";
   document.getElementById("userInput").style.display = "inline-block";
+  document.getElementById("gamelogo").style.display = "inline-block";
+
   startGame();
 }
 
