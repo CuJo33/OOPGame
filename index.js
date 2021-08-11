@@ -1026,3 +1026,5 @@ function startGameClick() {
   document.getElementById("userInput").style.display = "inline-block";
   startGame();
 }
+
+// test
