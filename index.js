@@ -125,6 +125,25 @@ class Room {
   // }
 }
 
+class Item {
+  constructor(name, description) {
+    this._name = name;
+    this._description = description;
+  }
+}
+
+const Key = new Item("Key", "This key will help you esacpe");
+
+class Character {
+  constructor(name, description, health) {
+    this._name = name;
+    this._description = description;
+    this._health = health;
+  }
+}
+
+const Player = new Character("Heather Granville", "How did i end up here?", 2);
+
 // Creation of rooms
 // #region
 const EntranceHall = new Room(
@@ -207,7 +226,7 @@ const BloodyRoom = new Room(
   "Item",
   "a room covered with weeks old blood and a chair",
   ["upper", "ground"],
-  [-2, 0],
+  [null, null],
   ["north", "east", "south", "west"]
 );
 
@@ -708,6 +727,53 @@ let Rooms = [
   Kitchen,
 ];
 
+let PossibleRooms = [
+  BasementLanding,
+  UpperLanding,
+  StairsFromBasement,
+  BloodyRoom,
+  CharredRoom,
+  Library,
+  CollapsedRoom,
+  Conservatory,
+  Chapel,
+  Gymnasium,
+  ServantsQuarters,
+  ResearchLaboratory,
+  Vault,
+  StoreRoom,
+  Tower,
+  OperatingLaboratory,
+  Gallery,
+  Bedroom,
+  Balcony,
+  Attic,
+  MasterBedroom,
+  DiningRoom,
+  Ballroom,
+  Gardens,
+  Patio,
+  CoalChute,
+  Graveyard,
+  Chasm,
+  UndergroundLake,
+  WineCellar,
+  PentagramChamber,
+  Larder,
+  FurnaceRoom,
+  Catacombs,
+  Crypt,
+  JunkRoom,
+  CreakyHallway,
+  MysticElevator,
+  DustyHallway,
+  OrganRoom,
+  StatuaryCorridor,
+  GameRoom,
+  AbandonedRoom,
+  Kitchen,
+];
+
 // Make a list of undiscovered rooms to pick from
 // make a way that you can only select the rooms that are on the level you are on.
 
@@ -717,8 +783,8 @@ let currentRoom = EntranceHall;
 let previousRoom = {};
 // the newroom is where you will be moving into if it has been undiscovered
 let newRoom = {};
-// I need to change changeRoom for if we are moving to a room that we already know about
 
+// I need to change changeRoom for if we are moving to a room that we already know about
 // we can try to use the grid references to do this
 let gameGridRef = [];
 
@@ -754,8 +820,8 @@ function directionOpposite(direction) {
 }
 
 function getNewRoomName() {
-  result = Math.floor(Math.random() * 45);
-  newRoomName = Rooms[result];
+  result = Math.floor(Math.random() * PossibleRooms.length);
+  newRoomName = PossibleRooms[result];
   newRoom = newRoomName.objName;
   return newRoomName;
 }
@@ -805,7 +871,6 @@ function getImgLink(newRoom) {
 
 function gridRefX(room) {
   array = room._gridRef;
-  console.log(`within the gridrefx function this is the array - ` + array);
   x = array[0];
   return x;
 }
@@ -834,8 +899,14 @@ function pushGridRef(GridRef, direction) {
 function changeGridRefToMeepleId(gridRef) {
   return `grid` + gridRef[0] + gridRef[1] + `+`;
 }
-function displaynewRoom(newGridRef) {}
-// document.getElementById("changedimage").src = imglink;
+
+function changeRoomLists(roomName) {
+  index = PossibleRooms.indexOf(roomName);
+  if (index > -1) {
+    PossibleRooms.splice(index, 1);
+  }
+  discoveredRooms.push(newRoom);
+}
 
 // Game Functions
 function startGame() {
@@ -850,12 +921,17 @@ function startGame() {
 
   document.addEventListener("keydown", function (event) {
     if (event.key === "Enter") {
+      console.log("i have hit the enter button");
       command = document.getElementById("userInput").value;
       command = command.toLowerCase();
       const directions = ["north", "south", "east", "west"];
       if (directions.includes(command)) {
+        console.log("the command is correct");
         // Check to see if the Room you are in has a room in the direction that has been asked, if it doesn't get a new Room
         if (!currentRoom._linkedRooms[command]) {
+          console.log(
+            "there is not a current link to the new tile location from this location"
+          );
           // first what is the newRoom?
           newRoom = getNewRoomName();
           // need to call the new room if unknown and pass through the linkrooms to both the current room and the new room in the opposite direction
@@ -864,53 +940,67 @@ function startGame() {
           // create the imgLink for the new room
           imgLink = getImgLink(newRoom);
           // work out the gridRefs for the currentRoom
-          console.log(currentRoom);
           currentGridRef = [gridRefX(currentRoom), gridRefY(currentRoom)];
-          // console.log(`currentGridRef  ` + currentGridRef);
           // create the gridRefs for the newRoom
           // make sure the newGridRef is empty
           newGridRef = [];
           newGridRef = pushGridRef(currentGridRef, command);
-          // console.log(`NEWGridRef  ` + newGridRef);
-          // set the new rooms gridref manipulation
-          newManipulatedGridRef = changeGridRefToMeepleId(newGridRef);
-          // console.log(`NEWGridRef  ` + newGridRef);
-          // console.log(`newManipulatedGridRef  ` + newManipulatedGridRef);
 
-          //document.getElementById(newGridRef).src = imglink
-          currentRoom = currentRoom.moveRooms(command);
-          meeple(currentRoom);
-          // console.log(
-          //   `currentroom which is actually the newly moved room _gridref ` +
-          //     currentRoom._gridRef
-          // );
-          // console.log(`newRoom_gridref ` + newGridRef);
-          // console.log(
-          //   `this will be set into the currentRoom grid ref being the new rooms`[
-          //     (gridRefX(newGridRef), gridRefY(newGridRef))
-          //   ]
-          // );
-          currentRoom._gridRef = [newGridRef[0], newGridRef[1]];
-          console.log(
-            `what is the currentroom_gridRef ` + currentRoom._gridRef
-          );
-          console.log(imgLink);
-          document.getElementById(newManipulatedGridRef.slice(0, -1)).src =
-            imgLink;
-          document.getElementById(
-            newManipulatedGridRef.slice(0, -1)
-          ).style.display = "block";
-          document.getElementById(newManipulatedGridRef).style.display =
-            "block";
-          displayRoomInfo(currentRoom);
-          document.getElementById("userInput").value = "";
+          // if (newGridRef is in dis) then a tile already exists here so we must move to that tile
+          // so we need to get the name of that tile being the discoveredRooms.index where the newGridRef == discoveredRooms[1]
+
+          let x = false;
+          for (let i = 0; i < discoveredRooms.length; i++) {
+            console.log("I am within the discovered rooms loop");
+            let room = discoveredRooms[i];
+            if (JSON.stringify(newGridRef) == JSON.stringify(room.gridRef)) {
+              console.log("The gridref is a match");
+              console.log(currentRoom);
+              console.log(newRoom);
+              console.log(room);
+              currentRoom.linkRooms(command, room);
+              room.linkRooms(directionOpposite(command), currentRoom);
+              console.log(currentRoom.moveRooms(command));
+              currentRoom = currentRoom.moveRooms(command);
+              meeple(currentRoom);
+              displayRoomInfo(currentRoom);
+              document.getElementById("userInput").value = "";
+              // break or return?
+              x = true;
+              break;
+            }
+            console.log("The gridref is NOT a match");
+          }
+
+          if (x == false) {
+            console.log("x is false meaning the gridref isn't taken");
+            // Update the RoomLists removing the newtile from the possiblerooms and adding it to discovered rooms
+            changeRoomLists(newRoom);
+            // set the new rooms gridref manipulation
+            newManipulatedGridRef = changeGridRefToMeepleId(newGridRef);
+            currentRoom = currentRoom.moveRooms(command);
+            meeple(currentRoom);
+            currentRoom._gridRef = [newGridRef[0], newGridRef[1]];
+            document.getElementById(newManipulatedGridRef.slice(0, -1)).src =
+              imgLink;
+            document.getElementById(
+              newManipulatedGridRef.slice(0, -1)
+            ).style.display = "block";
+            document.getElementById(newManipulatedGridRef).style.display =
+              "block";
+            displayRoomInfo(currentRoom);
+            document.getElementById("userInput").value = "";
+          }
         } else {
+          console.log("x is true meaning the gridref is taken");
+          //  probably means none of this should run
           currentRoom = currentRoom.moveRooms(command);
           meeple(currentRoom);
           displayRoomInfo(currentRoom);
           document.getElementById("userInput").value = "";
         }
       } else {
+        console.log("you didnt put in the correct command");
         document.getElementById("userInput").value = "";
         alert("that is not a valid command, please try again");
       }
