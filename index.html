@@ -24,7 +24,19 @@
       <img class="boxImage" id="imgGameLogo" src="EditedPics/GameName.JPG" />
     </div>
     <div class="container-fluid">
-      <div class="col" id="resetGame"></div>
+      <div class="col" id="resetGame">
+        <h2 id="restTitle">Would you like to play again?</h2>
+        <br /><br /><br /><br />
+        <div class="row justify-content-center" id="restGameBox">
+          <input
+            type="button"
+            value="Play again"
+            class="btn btn-success mx-auto"
+            id="myButton"
+            onclick="location.reload(true);"
+          />
+        </div>
+      </div>
       <div class="row">
         <div class="col justify-content-center" id="forceField"></div>
       </div>

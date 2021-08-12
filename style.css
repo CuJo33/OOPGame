@@ -31,11 +31,18 @@ body {
   margin-left: 830px;
 }
 
+#resetGame {
+  height: 200px;
+  width: 200px;
+  margin-top: 300px;
+}
+
 #subTitle,
 #details,
 #details2,
 #howTo,
-#howTwo {
+#howTwo,
+#restTitle {
   text-align: center;
   color: rgba(233, 221, 116, 0.801);
 }

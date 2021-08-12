@@ -931,7 +931,6 @@ function startGame() {
       // if there are 24 discovered rooms it means the person has failed to escape because they didnt get the forcefield down
       // therefore we want to skip all the code and tell them they lost.
       // they would be still attempting to move if they are hitting enter thus being in this part of the code
-      console.log(`discovered rooms` + discoveredRooms.length);
       if (discoveredRooms.length <= 23) {
         console.log("i have hit the enter button");
         command = document.getElementById("userInput").value;
@@ -1007,6 +1006,8 @@ function startGame() {
                 meeple(currentRoom);
                 displayRoomInfo(currentRoom);
                 document.getElementById("userInput").value = "";
+                document.getElementById("resetGame").style.display =
+                  "inline-block";
                 y = true;
               }
             }
@@ -1059,6 +1060,14 @@ function startGame() {
                   "block";
                 displayRoomInfo(currentRoom);
                 document.getElementById("userInput").value = "";
+              }
+
+              if (currentRoom == CollapsedRoom) {
+                alert(
+                  "You have fallen into the Collapsed Room and have lost the game"
+                );
+                document.getElementById("resetGame").style.display =
+                  "inline-block";
               }
               // increment the newRoomNumber
               newRoomNumber++;
