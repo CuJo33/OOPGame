@@ -2,12 +2,12 @@ body {
   background-color: black;
 }
 
-.gameName {
-  background-color: royalblue;
-}
-
 .boxImage {
   position: absolute;
+}
+
+#myButton {
+  background-color: rgba(46, 172, 8, 0.835);
 }
 
 #userInput {
@@ -52,7 +52,6 @@ body {
 }
 
 #mapAppature {
-  border: black 1px solid;
   position: relative;
   height: 800px;
   width: 1200px;
@@ -108,8 +107,4 @@ body {
 
 .noBorder {
   display: none !important;
-}
-
-#myButton {
-  background-color: rgba(46, 172, 8, 0.835);
 }

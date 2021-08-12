@@ -1,0 +1,52 @@
+#forceField {
+  position: absolute;
+  margin: auto;
+  top: 100px;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 802px;
+  width: 1202px;
+}
+
+#forceField:before,
+#forceField:after {
+  content: "";
+  position: absolute;
+  left: -2px;
+  top: -2px;
+  background: linear-gradient(
+    45deg,
+    #2298e7,
+    #0000ff,
+    #86e2e6,
+    #5255d4,
+    #157a75,
+    #3e06f5,
+    #a2a2ec,
+    #4292b8,
+    #218bbd,
+    #ffffff
+  );
+  background-size: 400%;
+  width: calc(100% + 4px);
+  height: calc(100% + 4px);
+  z-index: -1;
+  animation: steam 20s linear infinite;
+}
+
+@keyframes steam {
+  0% {
+    background-position: 0 0;
+  }
+  50% {
+    background-position: 400% 0;
+  }
+  100% {
+    background-position: 0 0;
+  }
+}
+
+#forceField:after {
+  filter: blur(50px);
+}
