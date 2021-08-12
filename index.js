@@ -924,152 +924,177 @@ function startGame() {
   Foyer.linkRooms("west", GrandStaircase);
   GrandStaircase.linkRooms("east", Foyer);
 
+  console.log(EntranceHall._linkedRooms["west"]);
+
   document.addEventListener("keydown", function (event) {
     if (event.key === "Enter") {
-      console.log("i have hit the enter button");
-      command = document.getElementById("userInput").value;
-      command = command.toLowerCase();
-      const directions = ["north", "south", "east", "west"];
-      if (directions.includes(command)) {
-        console.log("the command is correct");
-        // Check to see if the Room you are in has a room in the direction that has been asked, if it doesn't get a new Room
-        if (!currentRoom._linkedRooms[command]) {
-          console.log(
-            "there is not a current link to the new tile location from this location"
-          );
-          // first what is the newRoom?
-          newRoom = getNewRoomName();
-          // need to call the new room if unknown and pass through the linkrooms to both the current room and the new room in the opposite direction
-          currentRoom.linkRooms(command, newRoom);
-          newRoom.linkRooms(directionOpposite(command), currentRoom);
-          // create the imgLink for the new room
-          imgLink = getImgLink(newRoom);
-          // work out the gridRefs for the currentRoom
-          currentGridRef = [gridRefX(currentRoom), gridRefY(currentRoom)];
-          // create the gridRefs for the newRoom
-          // make sure the newGridRef is empty
-          newGridRef = [];
-          newGridRef = pushGridRef(currentGridRef, command);
+      // if there are 24 discovered rooms it means the person has failed to escape because they didnt get the forcefield down
+      // therefore we want to skip all the code and tell them they lost.
+      // they would be still attempting to move if they are hitting enter thus being in this part of the code
+      console.log(`discovered rooms` + discoveredRooms.length);
+      if (discoveredRooms.length <= 23) {
+        console.log("i have hit the enter button");
+        command = document.getElementById("userInput").value;
+        command = command.toLowerCase();
+        const directions = ["north", "south", "east", "west"];
+        if (directions.includes(command)) {
+          console.log("the command is correct");
+          // Check to see if the Room you are in has a room in the direction that has been asked, if it doesn't get a new Room
+          if (!currentRoom._linkedRooms[command]) {
+            console.log(
+              "there is not a current link to the new tile location from this location"
+            );
+            // first what is the newRoom?
+            newRoom = getNewRoomName();
+            // need to call the new room if unknown and pass through the linkrooms to both the current room and the new room in the opposite direction
+            currentRoom.linkRooms(command, newRoom);
+            newRoom.linkRooms(directionOpposite(command), currentRoom);
+            // create the imgLink for the new room
+            imgLink = getImgLink(newRoom);
+            // work out the gridRefs for the currentRoom
+            currentGridRef = [gridRefX(currentRoom), gridRefY(currentRoom)];
+            // create the gridRefs for the newRoom
+            // make sure the newGridRef is empty
+            newGridRef = [];
+            newGridRef = pushGridRef(currentGridRef, command);
 
-          let y = false;
-          if (
-            newGridRef[0] >= 3 ||
-            newGridRef[0] <= -4 ||
-            newGridRef[1] >= 3 ||
-            newGridRef[1] <= -2
-          ) {
-            if (forceFieldOn === false && forceFieldTurnedOff === false) {
-              forceFieldOn = true;
-              document.getElementById("forceField").style.display =
-                "inline-block";
-              // y = true;
-              alert(
-                "A forcefield blocks your path, keep exploring and maybe you can find an answer to it"
-                // BREAK THESE TIES???
-                // currentRoom.linkRooms(command, newRoom);
-                //  newRoom.linkRooms(directionOpposite(command), currentRoom);
-              );
-              newRoomNumber = 7;
-              document.getElementById("userInput").value = "";
-            } else if (forceFieldOn === true) {
-              // return that you can't go this way because of the forcefield
-              // y = true;
-              alert(
-                "A forcefield blocks your path, keep exploring and maybe you can find an answer to it"
-              );
-              // BREAK THESE TIES???
-              // currentRoom.linkRooms(command, newRoom);
-              //  newRoom.linkRooms(directionOpposite(command), currentRoom);
-
-              document.getElementById("userInput").value = "";
-              // set a variable to make sure that you don't move anywhere.
-            } else if (forceFieldOn === false && forceFieldTurnedOff === true) {
-              // return that you have escaped the house and won the game
-              document.getElementById("userInput").value = "";
-              alert("Congratulations you have won the game");
-              currentRoom = currentRoom.moveRooms(command);
-              meeple(currentRoom);
-              displayRoomInfo(currentRoom);
-              document.getElementById("userInput").value = "";
-              y = true;
-            }
-          }
-
-          let x = false;
-          for (let i = 0; i < discoveredRooms.length; i++) {
-            console.log("I am within the discovered rooms loop");
-            let room = discoveredRooms[i];
-            if (JSON.stringify(newGridRef) == JSON.stringify(room.gridRef)) {
-              currentRoom.linkRooms(command, room);
-              room.linkRooms(directionOpposite(command), currentRoom);
-              currentRoom = currentRoom.moveRooms(command);
-              meeple(currentRoom);
-              displayRoomInfo(currentRoom);
-              document.getElementById("userInput").value = "";
-              // break or return?
-              x = true;
-              console.log("set x to true - meaning the room already exists");
-              break;
-            }
-          }
-
-          if (x == false) {
+            let y = false;
             if (
               newGridRef[0] >= 3 ||
               newGridRef[0] <= -4 ||
               newGridRef[1] >= 3 ||
               newGridRef[1] <= -2
             ) {
-              console.log("grid ref out of bounds");
-              document.getElementById("userInput").value = "";
-            } else {
-              console.log("x is false meaning the gridref isn't taken");
-              // Update the RoomLists removing the newtile from the possiblerooms and adding it to discovered rooms
-              changeRoomLists(newRoom);
-              // set the new rooms gridref manipulation
-              newManipulatedGridRef = changeGridRefToMeepleId(newGridRef);
-              currentRoom = currentRoom.moveRooms(command);
-              meeple(currentRoom);
-              currentRoom._gridRef = [newGridRef[0], newGridRef[1]];
-              document.getElementById(newManipulatedGridRef.slice(0, -1)).src =
-                imgLink;
-              document.getElementById(
-                newManipulatedGridRef.slice(0, -1)
-              ).style.display = "block";
-              document.getElementById(newManipulatedGridRef).style.display =
-                "block";
-              displayRoomInfo(currentRoom);
-              document.getElementById("userInput").value = "";
+              if (forceFieldOn === false && forceFieldTurnedOff === false) {
+                forceFieldOn = true;
+                document.getElementById("forceField").style.display =
+                  "inline-block";
+                // y = true;
+                alert(
+                  "A forcefield blocks your path, keep exploring and maybe you can find an answer to it"
+                );
+                if (currentRoom._linkedRooms[command]) {
+                  delete currentRoom._linkedRooms[command];
+                }
+                if (newRoom._linkedRooms[directionOpposite(command)]) {
+                  delete newRoom._linkedRooms[directionOpposite(command)];
+                }
+                newRoomNumber = 7;
+                document.getElementById("userInput").value = "";
+              } else if (forceFieldOn === true) {
+                // return that you can't go this way because of the forcefield
+                // y = true;
+                alert(
+                  "A forcefield blocks your path, keep exploring and maybe you can find an answer to it"
+                );
+                if (currentRoom._linkedRooms[command]) {
+                  delete currentRoom._linkedRooms[command];
+                }
+                if (newRoom._linkedRooms[directionOpposite(command)]) {
+                  delete newRoom._linkedRooms[directionOpposite(command)];
+                }
+                document.getElementById("userInput").value = "";
+                // set a variable to make sure that you don't move anywhere.
+              } else if (
+                forceFieldOn === false &&
+                forceFieldTurnedOff === true
+              ) {
+                // return that you have escaped the house and won the game
+                document.getElementById("userInput").value = "";
+                console.log(discoveredRooms.length);
+                alert("Congratulations you have won the game");
+                currentRoom = currentRoom.moveRooms(command);
+                meeple(currentRoom);
+                displayRoomInfo(currentRoom);
+                document.getElementById("userInput").value = "";
+                y = true;
+              }
             }
-            // increment the newRoomNumber
-            newRoomNumber++;
-            console.log(newRoomNumber);
-            // if newRoomNumber = 13 then find powerbreaker and turn off forcefield
-            if (newRoomNumber == 13 && forceFieldOn == true) {
-              console.log("how the hell am i here");
-              // set the text to document that a forcefeild breaker has been found and is now turned off
-              alert(
-                "You found the breaker switch for the forcefield! You have turned it off"
-              );
-              document.getElementById("forceField").style.display = "none";
-              forceFieldOn = false;
-              forceFieldTurnedOff = true;
+
+            let x = false;
+            for (let i = 0; i < discoveredRooms.length; i++) {
+              console.log("I am within the discovered rooms loop");
+              let room = discoveredRooms[i];
+              if (JSON.stringify(newGridRef) == JSON.stringify(room.gridRef)) {
+                currentRoom.linkRooms(command, room);
+                room.linkRooms(directionOpposite(command), currentRoom);
+                currentRoom = currentRoom.moveRooms(command);
+                meeple(currentRoom);
+                displayRoomInfo(currentRoom);
+                document.getElementById("userInput").value = "";
+                // break or return?
+                x = true;
+                console.log("set x to true - meaning the room already exists");
+                break;
+              }
             }
+
+            console.log(`value of x ` + x);
+            if (x == false) {
+              if (
+                newGridRef[0] >= 3 ||
+                newGridRef[0] <= -4 ||
+                newGridRef[1] >= 3 ||
+                newGridRef[1] <= -2
+              ) {
+                console.log("grid ref out of bounds");
+                document.getElementById("userInput").value = "";
+                newRoomNumber--;
+              } else {
+                console.log("x is false meaning the gridref isn't taken");
+                // Update the RoomLists removing the newtile from the possiblerooms and adding it to discovered rooms
+                changeRoomLists(newRoom);
+                // set the new rooms gridref manipulation
+                newManipulatedGridRef = changeGridRefToMeepleId(newGridRef);
+                currentRoom = currentRoom.moveRooms(command);
+                meeple(currentRoom);
+                currentRoom._gridRef = [newGridRef[0], newGridRef[1]];
+                document.getElementById(
+                  newManipulatedGridRef.slice(0, -1)
+                ).src = imgLink;
+                document.getElementById(
+                  newManipulatedGridRef.slice(0, -1)
+                ).style.display = "block";
+                document.getElementById(newManipulatedGridRef).style.display =
+                  "block";
+                displayRoomInfo(currentRoom);
+                document.getElementById("userInput").value = "";
+              }
+              // increment the newRoomNumber
+              newRoomNumber++;
+              console.log(newRoomNumber);
+              // if newRoomNumber = 13 then find powerbreaker and turn off forcefield
+              if (newRoomNumber == 13 && forceFieldOn == true) {
+                console.log("how the hell am i here");
+                // set the text to document that a forcefeild breaker has been found and is now turned off
+                alert(
+                  "You found the breaker switch for the forcefield! You have turned it off"
+                );
+                document.getElementById("forceField").style.display = "none";
+                forceFieldOn = false;
+                forceFieldTurnedOff = true;
+              }
+            }
+          } else {
+            console.log("x is true meaning the gridref is taken");
+            // so move into the room
+            //  probably means none of this should run
+            currentRoom = currentRoom.moveRooms(command);
+            meeple(currentRoom);
+            displayRoomInfo(currentRoom);
+            document.getElementById("userInput").value = "";
           }
         } else {
-          console.log("x is true meaning the gridref is taken");
-          // so move into the room
-          //  probably means none of this should run
-          currentRoom = currentRoom.moveRooms(command);
-          meeple(currentRoom);
-          displayRoomInfo(currentRoom);
           document.getElementById("userInput").value = "";
+          alert(
+            "That is not a valid direction of travel, please try again (north,east,south,west)"
+          );
         }
       } else {
-        document.getElementById("userInput").value = "";
         alert(
-          "that is not a valid direction of travel, please try again (north,east,south,west)"
+          "You have run out of rooms to find the breaker and are stuck in the house"
         );
+        document.getElementById("resetGame").style.display = "inline-block";
       }
     }
   });
@@ -1097,5 +1122,3 @@ function startGameClick() {
 
   startGame();
 }
-
-// test
