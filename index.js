@@ -1090,6 +1090,11 @@ function startGame() {
             "That is not a valid direction of travel, please try again (north,east,south,west)"
           );
         }
+      } else if (forceFieldOn == false) {
+        alert(
+          "Were you even trying to escape? Well you lost! Maybe think outside of the box next time."
+        );
+        document.getElementById("resetGame").style.display = "inline-block";
       } else {
         alert(
           "You have run out of rooms to find the breaker and are stuck in the house"
@@ -1107,6 +1112,7 @@ document.getElementById("directionQuestion").style.display = "none";
 document.getElementById("userInput").style.display = "none";
 document.getElementById("gamelogo").style.display = "none";
 document.getElementById("forceField").style.display = "none";
+document.getElementById("resetGame").style.display = "none";
 
 // Start game
 function startGameClick() {
