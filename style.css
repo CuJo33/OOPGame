@@ -42,7 +42,8 @@ body {
 #details2,
 #howTo,
 #howTwo,
-#restTitle {
+#restTitle,
+#howThree {
   text-align: center;
   color: rgba(233, 221, 116, 0.801);
 }

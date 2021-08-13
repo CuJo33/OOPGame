@@ -931,7 +931,7 @@ function startGame() {
       // if there are 24 discovered rooms it means the person has failed to escape because they didnt get the forcefield down
       // therefore we want to skip all the code and tell them they lost.
       // they would be still attempting to move if they are hitting enter thus being in this part of the code
-      if (discoveredRooms.length <= 23) {
+      if (discoveredRooms.length <= 23 || forceFieldTurnedOff == true) {
         console.log("i have hit the enter button");
         command = document.getElementById("userInput").value;
         command = command.toLowerCase();
@@ -1061,14 +1061,6 @@ function startGame() {
                 displayRoomInfo(currentRoom);
                 document.getElementById("userInput").value = "";
               }
-
-              if (currentRoom == CollapsedRoom) {
-                alert(
-                  "You have fallen into the Collapsed Room and have lost the game"
-                );
-                document.getElementById("resetGame").style.display =
-                  "inline-block";
-              }
               // increment the newRoomNumber
               newRoomNumber++;
               console.log(newRoomNumber);
@@ -1082,6 +1074,15 @@ function startGame() {
                 document.getElementById("forceField").style.display = "none";
                 forceFieldOn = false;
                 forceFieldTurnedOff = true;
+              }
+              if (currentRoom == CollapsedRoom || currentRoom == CoalChute) {
+                alert(
+                  `You have fallen into the ` +
+                    currentRoom.name +
+                    ` and have lost the game`
+                );
+                document.getElementById("resetGame").style.display =
+                  "inline-block";
               }
             }
           } else {
@@ -1099,12 +1100,12 @@ function startGame() {
             "That is not a valid direction of travel, please try again (north,east,south,west)"
           );
         }
-      } else if (forceFieldOn == false) {
+      } else if (forceFieldOn == false && forceFieldTurnedOff == false) {
         alert(
           "Were you even trying to escape? Well you lost! Maybe think outside of the box next time."
         );
         document.getElementById("resetGame").style.display = "inline-block";
-      } else {
+      } else if (forceFieldTurnedOff == false) {
         alert(
           "You have run out of rooms to find the breaker and are stuck in the house"
         );
